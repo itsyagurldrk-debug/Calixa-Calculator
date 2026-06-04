@@ -93,39 +93,64 @@
       <button onclick="calculate()">=</button>
 
       <button onclick="press('+')">+</button>
+      <button onclick="press('(')">(</button>
+      <button onclick="press(')')">)</button>
+      <button onclick="press('.')">.</button>
+      <button onclick="square()">x²</button>
+
+      <button onclick="sqrt()">√</button>
+      <button onclick="power()">xʸ</button>
     </div>
 
     <div class="history" id="history"></div>
   </div>
+<script>
+  const display = document.getElementById("display");
+  const historyDiv = document.getElementById("history");
+  let history = [];
 
-  <script>
-    const display = document.getElementById("display");
-    const historyDiv = document.getElementById("history");
-    let history = [];
+  function press(value) {
+    display.value += value;
+  }
 
-    function press(value) {
-      display.value += value;
+  function clearDisplay() {
+    display.value = "";
+  }
+
+  function backspace() {
+    display.value = display.value.slice(0, -1);
+  }
+
+  function calculate() {
+    try {
+      let expression = display.value;
+
+      expression = expression.replace(/×/g, "*");
+      expression = expression.replace(/÷/g, "/");
+
+      const result = Function("return " + expression)();
+
+      history.unshift(display.value + " = " + result);
+      history = history.slice(0, 5);
+
+      historyDiv.innerHTML = history.join("<br>");
+      display.value = result;
+
+    } catch {
+      display.value = "Error";
     }
+  }
+  function square() {
+    display.value = Number(display.value) ** 2;
+  }
 
-    function clearDisplay() {
-      display.value = "";
-    }
+  function sqrt() {
+    display.value = Math.sqrt(Number(display.value));
+  }
 
-    function backspace() {
-      display.value = display.value.slice(0, -1);
-    }
-
-    function calculate() {
-      try {
-        const result = eval(display.value);
-        history.unshift(display.value + " = " + result);
-        history = history.slice(0, 3);
-        historyDiv.innerHTML = history.join("<br>");
-        display.value = result;
-      } catch {
-        display.value = "Error";
-      }
-    }
-  </script>
+  function power() {
+    display.value += "**";
+  }
+</script>
 </body>
 </html>
